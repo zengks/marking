@@ -25,7 +25,7 @@ const registerUser = asyncHandler(async (req, res) => {
     // Create a new user
     // Hash password
     const salt = await bcrypt.genSaltSync(10)
-    const hashedPassword = await bcrypt.hashSync(password, salt)
+    const hashedPassword = await bcrypt.hash(password, salt)
 
     // Create the user with hashed password
     const user = await User.create({
@@ -55,7 +55,22 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route /api/users/login
 // @access Public
 const loginUser = asyncHandler(async (req, res) => {
-    res.send('Login Route')
+    const { email, password } = req.body
+    const user = await User.findOne({ email })
+
+    // compare hashed password to entered password
+    const isPasswordCorrect = await bcrypt.compare(password, user.password)
+    if (user && isPasswordCorrect) {
+        res.status(200).json({
+            _id: user.id,
+            name: user.name,
+            email: user.email,
+            isInstructor: user.isInstructor,
+        })
+    } else {
+        res.status(401)
+        throw new Error('Error: Invalid credentials')
+    }
 })
 
 module.exports = {
