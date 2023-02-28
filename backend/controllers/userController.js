@@ -76,7 +76,22 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc Get current user
+// @route /api/users/instructor
+// @access Private
+const getInstructor = asyncHandler(async (req, res) => {
+    const user = {
+        id: req.user._id,
+        email: req.user.email,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
+
+    }
+    res.status(200).json(user)
+})
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    getInstructor
 }
