@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const bcrypt = require('bcryptjs')
+const generateToken = require('../token/generateToken')
 
 const User = require('../models/userModel')
 // @desc Register a new user
@@ -43,6 +44,7 @@ const registerUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             isInstructor: user.isInstructor,
+            token: generateToken(user._id),
         })
     } else {
         res.status(400)
@@ -66,6 +68,7 @@ const loginUser = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             isInstructor: user.isInstructor,
+            token: generateToken(user._id),
         })
     } else {
         res.status(401)
