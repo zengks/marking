@@ -3,14 +3,43 @@ const bcrypt = require('bcryptjs')
 const generateToken = require('../token/generateToken')
 
 const User = require('../models/userModel')
+
+const defaultUsers = require('../../defaultUsers.json')
+const questions = require('../../assignments.json')
+
+const createDefaultUsers = asyncHandler(async (req, res) => {
+    const salt = await bcrypt.genSaltSync(10)
+    const hashedPassword = await bcrypt.hash(defaultUsers.instructor.password, salt)
+
+    await User.create({
+        lastName: defaultUsers.instructor.lastName,
+        firstName: defaultUsers.instructor.firstName,
+        email: defaultUsers.instructor.email,
+        password: hashedPassword,
+        isAdmin: true,
+    })
+
+    for (const student of defaultUsers.students) {
+        const hashedPassword = await bcrypt.hash(student.password, salt)
+        await User.create({
+            lastName: student.lastName,
+            firstName: student.firstName,
+            email: student.email,
+            password: hashedPassword,
+            assignments: questions,
+            isAdmin: false,
+        })
+    }
+})
+
 // @desc Register a new user
 // @route /api/users
 // @access Public
 const registerUser = asyncHandler(async (req, res) => {
-    const { lastName, firstName, email, password, isInstructor } = req.body
+    const { lastName, firstName, email, password, isAdmin } = req.body
 
     // Validation
-    if (!lastName || !firstName || !email || !password || !isInstructor) {
+    if (!lastName || !firstName || !email || !password || !isAdmin) {
         res.status(400)
         throw new Error('Please include all fields')
     }
@@ -34,7 +63,7 @@ const registerUser = asyncHandler(async (req, res) => {
         firstName,
         email,
         password: hashedPassword,
-        isInstructor,
+        isAdmin,
     })
 
     // If the user created successfully
@@ -43,7 +72,7 @@ const registerUser = asyncHandler(async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
-            isInstructor: user.isInstructor,
+            isAdmin: user.isAdmin,
             token: generateToken(user._id),
         })
     } else {
@@ -65,9 +94,10 @@ const loginUser = asyncHandler(async (req, res) => {
     if (user && isPasswordCorrect) {
         res.status(200).json({
             _id: user.id,
-            name: user.name,
+            name: user.firstName + user.lastName,
             email: user.email,
-            isInstructor: user.isInstructor,
+            isAdmin: user.isAdmin,
+            assignments: user.assignments,
             token: generateToken(user._id),
         })
     } else {
@@ -85,13 +115,14 @@ const getInstructor = asyncHandler(async (req, res) => {
         email: req.user.email,
         firstName: req.user.firstName,
         lastName: req.user.lastName,
-
+        isAdmin: req.user.isAdmin,
     }
     res.status(200).json(user)
 })
 
 module.exports = {
+    createDefaultUsers,
     registerUser,
     loginUser,
-    getInstructor
+    getInstructor,
 }

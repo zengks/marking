@@ -1,0 +1,28 @@
+{
+    "instructor": {
+        "lastName": "Smith",
+        "firstName": "Robert",
+        "email": "instructor@gmail.com",
+        "password": "myPassword123"
+    },
+    "students": [
+        {
+            "lastName": "Plinger",
+            "firstName": "Jelena",
+            "email": "p.jelena@gmail.com",
+            "password": "pjelena123"
+        },
+        {
+            "lastName": "Atlagic",
+            "firstName": "Milica",
+            "email": "a.milica@gmail.com",
+            "password": "amilica123"
+        },
+        {
+            "lastName": "Dobric",
+            "firstName": "Marko",
+            "email": "d.marko@gmail.com",
+            "password": "dmarko123"
+        }
+    ]
+}

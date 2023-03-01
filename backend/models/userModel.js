@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose
 
+
 const userSchema = new Schema({
     firstName: {
         type: String,
@@ -19,11 +20,17 @@ const userSchema = new Schema({
         type: String,
         required: [true, 'Please enter your password'],
     },
-    isInstructor: {
+    isAdmin: {
         type: Boolean,
         required: true,
         default: false,
     },
+    assignments: {
+        type: Array,
+        required: false,
+        default: [],
+    }
+
 },
     {
         timestamps: true

@@ -1,0 +1,16 @@
+[
+    {
+        "name":"Assignment 1",
+        "description": "When was BCIT's 50th anniversary celebration?",
+        "choices": [2016, 1967, 2017, 1987]
+    },
+    {
+        "name":"Assignment 2",
+        "description": "Which of the following services does the LTC provide? Select all that apply.",
+        "choices": ["Technical illustration", "Instructional design", "Financial advice", "Admisiion and Registration", "Audio-visual loans"]
+    },
+    {
+        "name":"Assignment 3",
+        "description": "The current Prime Minister in Canada is (include the starting year for the PM)"
+    }
+]
